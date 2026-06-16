@@ -663,9 +663,9 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 
 <section class="app-confirmation" id="appConfirmation" aria-live="polite">
   <div class="app-conf-mark">⊕</div>
-  <div class="app-conf-meta">SIGNAL RECEIVED · NO. <span id="appConfId">—</span></div>
+  <div class="app-conf-meta">Submission ID: <span id="appConfId">—</span></div>
   <h2 class="app-conf-title">Received<span style="color:var(--flame)">.</span></h2>
-  <p class="app-conf-sub">Your petition is in our hands, <span class="app-conf-name" id="appConfName">friend</span>. We read every word with care. If your application moves us, you'll hear back within seven days with next steps and a quiet conversation.</p>
+  <p class="app-conf-sub">Your petition is in our hands, <span class="app-conf-name" id="appConfName">friend</span>. We read every word with care. If your application feels aligned, you'll hear back within seven days with next steps and a link to confirm your reservation. If you don't hear from us and you'd like to re-apply, please do — you may apply as many times as you like until you feel your truest desires have been expressed.</p>
   <div class="app-conf-actions">
     <button type="button" class="app-conf-link" id="appConfReturn">Return to Threshold <span class="arrow">↗</span></button>
     <button type="button" class="app-conf-link" id="appConfCopy">Copy a transcript <span class="arrow">⎘</span></button>
@@ -1019,15 +1019,18 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 
     // Build payload
     const data = Object.fromEntries(new FormData(appForm).entries());
-    const id = 'TH-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+    // Random 6-char alphanumeric submission ID, e.g. "49A12Z" — for back-end tracking
+    const id = Array.from({ length: 6 }, () =>
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[Math.floor(Math.random() * 36)]
+    ).join("");
     const submittedAt = new Date().toISOString();
     const firstName = ((data.name || '').trim().split(' ')[0]) || 'friend';
 
     const payload = {
+      "Submission ID": id,
       ...data,
-      _subject: `THRESHOLD PETITION · ${id} · ${data.name || 'Unknown'}`,
+      _subject: `Threshold Petition · Submission ID ${id} · ${data.name || 'Unknown'}`,
       _replyto: data.email || '',
-      signalId: id,
       submittedAt
     };
 
@@ -1064,7 +1067,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
       };
       appConfCopy.onclick = () => {
         const transcript = Object.entries(data).map(([k, v]) => `${k.toUpperCase()}\n${v}`).join('\n\n');
-        const blob = `THRESHOLD PETITION · ${id}\n${new Date(submittedAt).toLocaleString()}\n\n${transcript}`;
+        const blob = `THRESHOLD PETITION · Submission ID ${id}\n${new Date(submittedAt).toLocaleString()}\n\n${transcript}`;
         if (navigator.clipboard) {
           navigator.clipboard.writeText(blob).then(() => {
             const prev = appConfCopy.innerHTML;
