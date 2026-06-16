@@ -361,7 +361,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 }
 </style>
 </head>
-<body>
+<body data-app-stage="1">
 
 <div class="loader" id="loader">
   <div class="loader-title serif">Threshold</div>
@@ -901,6 +901,11 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
     e.preventDefault();
     exitApply();
   });
+
+  // Initialize stage state so Stage 01 fields are visible from the start
+  // (without this, no .app-stage matches the display:flex rule and the form
+  // renders with zero fields — only the Continue button shows).
+  setAppStage(1);
 
   // Browser back/forward + initial hash
   window.addEventListener('popstate', () => {
