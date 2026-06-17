@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Threshold — A Three-Day Initiation</title>
+<title>Threshold · A Three-Day Initiation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -30,7 +30,8 @@
   --easing-out:cubic-bezier(0.4, 0, 0.6, 1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',-apple-system,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;cursor:default}
+html{scroll-behavior:smooth}
+html,body{min-height:100%;overflow-x:hidden;background:var(--bg);color:var(--ink);font-family:'Space Grotesk',-apple-system,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;cursor:default}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .serif{font-family:'Instrument Serif',serif;font-weight:400}
 .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:300;letter-spacing:0.04em}
@@ -108,6 +109,8 @@ body.complete .play-label{color:var(--ember)}
 .rail{position:fixed;top:50%;transform:translateY(-50%);z-index:30;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;line-height:1.6;color:var(--ink-4)}
 .rail-left{left:32px;text-align:left}
 .rail-right{right:32px;text-align:right}
+/* Hide the side rails until the viewport is wide enough to clear the centered hero (prevents overlap) */
+@media (max-width:1200px){.rail{display:none}}
 .rail-title{font-size:9px;letter-spacing:0.28em;color:var(--bronze);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .rail-right .rail-title{justify-content:flex-end}
 .rail-title::before,.rail-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent)}
@@ -192,7 +195,11 @@ body.complete .status-led .led{background:var(--ember);box-shadow:0 0 10px var(-
 /* Default state: subpage elements hidden, audio view shown */
 .app-atmo,.app-topbar,.app-hero,.app-shell,.app-confirmation,.app-footer{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 700ms var(--easing),visibility 700ms var(--easing)}
 
-/* Apply view: page scrollable; audio UI fades out; app UI fades in */
+/* The application subpage is wrapped in #apply-doc and hidden until the apply view */
+#apply-doc{display:none}
+body.view-apply #apply-doc{display:block}
+
+/* Apply view: audio UI + editorial hidden; app UI fades in */
 body.view-apply{overflow-y:auto;overflow-x:hidden}
 body.view-apply #stage,
 body.view-apply .meta-top,
@@ -204,6 +211,11 @@ body.view-apply .cap,
 body.view-apply .cap-right,
 body.view-apply .hero,
 body.view-apply .loader{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 500ms var(--easing),visibility 500ms var(--easing)}
+/* Editorial content is in normal flow, so remove it from layout entirely in apply view */
+body.view-apply .gateway-spacer,
+body.view-apply .editorial,
+body.view-apply .site-foot,
+body.view-apply .scroll-cue{display:none}
 body.view-apply .app-atmo,
 body.view-apply .app-topbar,
 body.view-apply .app-hero,
@@ -355,8 +367,55 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
   .app-footer{padding:24px 20px;font-size:8px}
 }
 
+/* === Editorial (scroll-down content below the gateway) === */
+.gateway-spacer{height:100vh;width:100%;pointer-events:none}
+.editorial{position:relative;z-index:90;background:var(--bg);border-top:1px solid var(--line-2)}
+.ed-section{max-width:680px;margin:0 auto;padding:104px 32px;border-bottom:1px solid rgba(232,197,71,0.08)}
+.ed-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--bronze);margin-bottom:26px;display:flex;align-items:center;gap:14px}
+.ed-eyebrow::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--flame),transparent)}
+.ed-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.01em;margin-bottom:30px;background:linear-gradient(180deg,#FFF6D6 0%,#F5E6A8 45%,#E8C547 75%,#FF8C42 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ed-lead{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(18px,2.2vw,22px);color:var(--gold-bright);line-height:1.4;margin-top:-14px;margin-bottom:30px}
+.ed-body p{font-size:16.5px;line-height:1.72;color:var(--ink-2);margin-bottom:18px;font-weight:300;letter-spacing:0.01em}
+.ed-body p:last-child{margin-bottom:0}
+.ed-emphasis{color:var(--gold-bright)!important;font-family:'Instrument Serif',serif;font-style:italic;font-size:18.5px!important;line-height:1.6!important;font-weight:400!important}
+
+.ed-dates{border-bottom:none}
+.waitlist{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}
+.waitlist-input{flex:1;min-width:200px;background:transparent;border:0;border-bottom:1px solid rgba(232,197,71,0.3);padding:12px 0;font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--ink);outline:none;transition:border-color 350ms var(--easing)}
+.waitlist-input::placeholder{color:var(--ink-5);font-style:italic;font-family:'Instrument Serif',serif}
+.waitlist-input:focus{border-bottom-color:var(--gold-bright)}
+.waitlist-btn{position:relative;background:transparent;border:1px solid rgba(232,197,71,0.5);color:var(--gold-bright);padding:12px 24px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 450ms var(--easing);overflow:hidden;display:inline-flex;align-items:center;gap:8px;z-index:1;white-space:nowrap}
+.waitlist-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#FFB347 0%,#FF6B1A 50%,#C73A0F 100%);opacity:0;transition:opacity 450ms var(--easing);z-index:-1}
+.waitlist-btn:hover{color:#FFF6D6;border-color:var(--flame);box-shadow:0 0 28px rgba(255,108,26,0.4)}
+.waitlist-btn:hover::before{opacity:1}
+.waitlist-btn:disabled{opacity:0.6;cursor:wait}
+.waitlist-btn .arrow{transition:transform 450ms var(--easing)}
+.waitlist-btn:hover .arrow{transform:translateX(5px)}
+.waitlist-msg{margin-top:16px;font-family:'Instrument Serif',serif;font-style:italic;font-size:15.5px;color:var(--gold-bright)}
+.waitlist-msg[hidden]{display:none}
+
+.ed-apply-cta{margin-top:54px;padding-top:30px;border-top:1px solid rgba(232,197,71,0.1);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.ed-apply-line{font-family:'Instrument Serif',serif;font-style:italic;font-size:18px;color:var(--ink-3);margin:0}
+.ed-apply-btn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-bright);text-decoration:none;display:inline-flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid transparent;transition:border-color 300ms var(--easing)}
+.ed-apply-btn:hover{border-bottom-color:var(--flame)}
+.ed-apply-btn .arrow{transition:transform 300ms var(--easing)}
+.ed-apply-btn:hover .arrow{transform:translateX(5px)}
+
+.site-foot{position:relative;z-index:90;background:var(--bg);border-top:1px solid var(--line-2);display:flex;justify-content:space-between;align-items:center;padding:30px 36px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--ink-5);flex-wrap:wrap;gap:10px}
+
+.scroll-cue{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);z-index:46;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ink-4);pointer-events:none;transition:opacity 500ms var(--easing)}
+.scroll-cue .cue-arrow{font-size:14px;color:var(--flame);animation:cueBounce 2s var(--easing) infinite}
+@keyframes cueBounce{0%,100%{transform:translateY(0);opacity:0.5}50%{transform:translateY(5px);opacity:1}}
+body.scrolled .scroll-cue{opacity:0}
+
+@media (max-width:720px){
+  .ed-section{padding:72px 22px}
+  .site-foot{padding:24px 20px;font-size:8px}
+  .scroll-cue{bottom:120px}
+}
+
 @media (prefers-reduced-motion: reduce){
-  .play-btn::before,.brand .dot,.status-led .led,.loader-bar::after,.app-brand .dot,.app-stage-meta::before,.app-atmo.ember-bg{animation:none}
+  .play-btn::before,.brand .dot,.status-led .led,.loader-bar::after,.app-brand .dot,.app-stage-meta::before,.app-atmo.ember-bg,.scroll-cue .cue-arrow{animation:none}
   *{transition-duration:0.01ms!important}
 }
 </style>
@@ -432,6 +491,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 </div>
 
 <!-- ============ APPLICATION SUBPAGE (#apply) ============ -->
+<div id="apply-doc">
 <div class="app-atmo css-grid"></div>
 <div class="app-atmo ember-bg"></div>
 
@@ -453,7 +513,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 </header>
 
 <section class="app-hero">
-  <div class="app-hero-kicker">The Threshold ▸ Application — Pre-Screen</div>
+  <div class="app-hero-kicker">The Threshold ▸ Application · Pre-Screen</div>
   <h1 class="app-hero-title">Petition</h1>
   <p class="app-hero-sub">A three-day immersive initiation for men ready to confront themselves, reclaim their power, and step into <span class="em">grounded, embodied masculinity.</span></p>
 </section>
@@ -533,7 +593,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
             <textarea id="afld-avoiding" name="avoiding" rows="3" placeholder="Be honest. That's the point." required></textarea>
           </div>
           <div class="app-field">
-            <label for="afld-conflict">How do you typically handle conflict — with yourself or others?</label>
+            <label for="afld-conflict">How do you typically handle conflict, with yourself or others?</label>
             <textarea id="afld-conflict" name="conflict" rows="3" placeholder="Be honest. That's the point." required></textarea>
           </div>
           <div class="app-field">
@@ -554,7 +614,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
             <textarea id="afld-experience" name="experience" rows="3" placeholder="Be honest. That's the point." required></textarea>
           </div>
           <div class="app-field">
-            <label for="afld-need">What do you think you need — but are afraid to admit?</label>
+            <label for="afld-need">What do you think you need, but are afraid to admit?</label>
             <textarea id="afld-need" name="need" rows="3" placeholder="Be honest. That's the point." required></textarea>
           </div>
           <div class="app-field select-wrap">
@@ -612,7 +672,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
             <button type="button" class="app-scale-dot" data-value="9">9</button>
             <button type="button" class="app-scale-dot" data-value="10">10</button>
           </div>
-          <div class="app-scale-labels"><span>1 — Not ready</span><span>10 — Burn the ships</span></div>
+          <div class="app-scale-labels"><span>1 · Not ready</span><span>10 · Burn the ships</span></div>
           <input type="hidden" name="commitment" value="" required>
         </div>
         <div class="app-field">
@@ -647,7 +707,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
         <div class="app-error-mark">⚠</div>
         <div class="app-error-body">
           <p class="app-error-title">Could not send</p>
-          <p class="app-error-msg" id="appErrorMsg">Network error. Your answers are saved on this device — try again.</p>
+          <p class="app-error-msg" id="appErrorMsg">Network error. Your answers are saved on this device. Try again.</p>
         </div>
       </div>
 
@@ -663,9 +723,9 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 
 <section class="app-confirmation" id="appConfirmation" aria-live="polite">
   <div class="app-conf-mark">⊕</div>
-  <div class="app-conf-meta">Submission ID: <span id="appConfId">—</span></div>
+  <div class="app-conf-meta">Submission ID: <span id="appConfId">·</span></div>
   <h2 class="app-conf-title">Received<span style="color:var(--flame)">.</span></h2>
-  <p class="app-conf-sub">Your petition is in our hands, <span class="app-conf-name" id="appConfName">friend</span>. We read every word with care. If your application feels aligned, you'll hear back within seven days with next steps and a link to confirm your reservation. If you don't hear from us and you'd like to re-apply, please do — you may apply as many times as you like until you feel your clearest intentions have been expressed.</p>
+  <p class="app-conf-sub">Your petition is in our hands, <span class="app-conf-name" id="appConfName">friend</span>. We read every word with care. If your application feels aligned, you'll hear back within seven days with next steps and a link to confirm your reservation. If you don't hear from us and you'd like to re-apply, please do. You may apply as many times as you like until you feel your clearest intentions have been expressed.</p>
   <div class="app-conf-actions">
     <button type="button" class="app-conf-link" id="appConfReturn">Return to Threshold <span class="arrow">↗</span></button>
     <button type="button" class="app-conf-link" id="appConfCopy">Copy a transcript <span class="arrow">⎘</span></button>
@@ -676,6 +736,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
   <span>SOURCE · LUNA ORA · THE THRESHOLD</span>
   <span>BEGIN AT THE BEGINNING</span>
 </footer>
+</div>
 <!-- ============ END APPLICATION SUBPAGE ============ -->
 
 <footer class="dock">
@@ -698,6 +759,72 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 <div class="cap-right">
   <span class="replay" id="replayBtn">↺ REPLAY</span>
 </div>
+
+<!-- Scroll cue (gateway only) -->
+<div class="scroll-cue" id="scrollCue" aria-hidden="true">
+  <span>The work below</span>
+  <span class="cue-arrow">↓</span>
+</div>
+
+<!-- Reserves the first screen so the fixed gateway shows through, then editorial scrolls up over it -->
+<div class="gateway-spacer" aria-hidden="true"></div>
+
+<main class="editorial" id="editorial">
+
+  <section class="ed-section">
+    <div class="ed-eyebrow">The Work</div>
+    <h2 class="ed-title">Three days. Twenty men. One fire.</h2>
+    <p class="ed-lead">For men who are ready to confront the deepest parts of themselves.</p>
+    <div class="ed-body">
+      <p>This is shadow work, not theory. Across three days off-grid you will sit in circle and speak what you have never said aloud: the grief, the anger, the fear, the masks you wear to be loved. You will meet the parts of yourself you have spent a lifetime managing, and you will be met by twenty men doing the same.</p>
+      <p>The days move between honest circle, embodiment practice, and time alone on the land. The kind of brotherhood that only forms when men stop performing.</p>
+      <p class="ed-emphasis">Make no mistake about what this is. It is shadow work, embodiment, and honest reckoning, held entirely in circle and conversation. There are no performances here. Only the grounded work of coming home to the man you are.</p>
+    </div>
+  </section>
+
+  <section class="ed-section">
+    <div class="ed-eyebrow">Why a Woman Holds the Fire</div>
+    <h2 class="ed-title">You were born through a woman. You will be initiated through one.</h2>
+    <div class="ed-body">
+      <p>In the old traditions, men were never made by men alone. They were brought to the threshold by the priestess: keeper of the gate, the one who sees straight through the armor a man wears for other men.</p>
+      <p>Our principal facilitator, Luna Ora, stands in that lineage. An internationally recognized priestess of sacred sexuality and sexual alchemy, with a 25-year career healing and guiding countless men and women across the planet, a servant of the Divine Mother, she carries the temple wisdom of Isis and Lilith. She does not offer softness. She offers the fierce, discerning feminine: the fire that burns off performance and calls the masculine into its full, undiluted power.</p>
+      <p>A circle of men ranks itself. A man competes, performs, hides. Before a true priestess there is nowhere to hide. She reflects what no brother can see, and holds a standard no man's approval can replace.</p>
+      <p class="ed-emphasis">This is a rite of passage. You will be seen completely, and what does survive the seeing is offered to the fire.</p>
+    </div>
+  </section>
+
+  <section class="ed-section">
+    <div class="ed-eyebrow">The Land</div>
+    <h2 class="ed-title">Off-grid in the Blue Ridge.</h2>
+    <div class="ed-body">
+      <p>Deep in the oldest mountains on the continent, above Asheville, North Carolina, where the ridgelines hold a silence the modern world has forgotten.</p>
+      <p>No screens. No clocks. No audience. Only the land, the fire, and the circle of men who came to do the work.</p>
+    </div>
+  </section>
+
+  <section class="ed-section ed-dates">
+    <div class="ed-eyebrow">The Dates</div>
+    <h2 class="ed-title">Mid-September. The circle hears first.</h2>
+    <div class="ed-body">
+      <p>Twenty men will be chosen. The exact dates are released to the mailing list before the application opens publicly. Join below and you will be the first to know when it goes live.</p>
+    </div>
+    <form class="waitlist" id="waitlistForm" autocomplete="on" novalidate>
+      <input class="waitlist-input" id="waitlistEmail" type="email" name="email" placeholder="your@email.com" aria-label="Email address" required>
+      <button class="waitlist-btn" type="submit"><span id="waitlistLabel">Join the circle</span> <span class="arrow">→</span></button>
+    </form>
+    <div class="waitlist-msg" id="waitlistMsg" hidden></div>
+    <div class="ed-apply-cta">
+      <p class="ed-apply-line">Already know this is yours?</p>
+      <a class="ed-apply-btn" href="#apply">Begin the application <span class="arrow">→</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <span>The Threshold</span>
+  <span>Blue Ridge Mountains, Asheville NC</span>
+</footer>
 
 <audio id="audio" preload="auto" src="threshold-audio.mp3"></audio>
 
@@ -884,6 +1011,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
   }
   function exitApply(skipHistory){
     document.body.classList.remove('view-apply');
+    window.scrollTo({ top: 0, behavior: 'auto' });
     // If a submission was completed, leave that state; otherwise reset
     if (!document.body.classList.contains('app-submitted')) {
       setTimeout(() => setAppStage(1), 700);
@@ -904,7 +1032,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 
   // Initialize stage state so Stage 01 fields are visible from the start
   // (without this, no .app-stage matches the display:flex rule and the form
-  // renders with zero fields — only the Continue button shows).
+  // renders with zero fields - only the Continue button shows).
   setAppStage(1);
 
   // Browser back/forward + initial hash
@@ -916,6 +1044,17 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
     // Defer one frame so the loader can resolve, then enter
     requestAnimationFrame(() => enterApply(true));
   }
+
+  // In-page #apply links (e.g. the editorial CTA) fire hashchange, not popstate
+  window.addEventListener('hashchange', () => {
+    if (location.hash === '#apply') enterApply(true);
+    else exitApply(true);
+  });
+
+  // Fade the scroll cue once the visitor begins scrolling
+  window.addEventListener('scroll', () => {
+    document.body.classList.toggle('scrolled', window.scrollY > 24);
+  }, { passive: true });
 
   // App back button (between stages)
   appBackBtn.addEventListener('click', () => {
@@ -1019,7 +1158,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 
     // Build payload
     const data = Object.fromEntries(new FormData(appForm).entries());
-    // Random 6-char alphanumeric submission ID, e.g. "49A12Z" — for back-end tracking
+    // Random 6-char alphanumeric submission ID, e.g. "49A12Z" - for back-end tracking
     const id = Array.from({ length: 6 }, () =>
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"[Math.floor(Math.random() * 36)]
     ).join("");
@@ -1081,7 +1220,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
       // Failure → graceful error with retry
       appContLabel.textContent = 'Try again';
       appContBtn.disabled = false;
-      appErrorMsg.textContent = `${err.message || 'Network error'}. Your answers are saved on this device — try again, or copy the transcript below.`;
+      appErrorMsg.textContent = `${err.message || 'Network error'}. Your answers are saved on this device. Try again, or copy the transcript below.`;
       appError.hidden = false;
       appError.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
@@ -1366,7 +1505,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
       for (let i = 0; i < POINTS; i++) {
         const angle = (i / POINTS) * Math.PI * 2 - Math.PI / 2;
 
-        // Symmetric mapping — left mirrors right
+        // Symmetric mapping - left mirrors right
         const sym = i <= HALF ? i : POINTS - i;
         const bin = Math.floor((sym / HALF) * useBins);
 
@@ -1440,7 +1579,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
       }
     }
 
-    // Inner waveform spokes — pointing inward from base ring
+    // Inner waveform spokes - pointing inward from base ring
     const inner = baseR * 0.82;
     const tickCount = 72;
     for (let i = 0; i < tickCount; i++) {
@@ -1472,15 +1611,15 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
   // Color gradient along the ring: bass (top) = cream-gold, mid (sides) = warm gold, treble (bottom) = flame
   function spikeColor(pos){
     if (pos < 0.35) {
-      // bass region — cream gold
+      // bass region - cream gold
       const m = pos / 0.35;
       return [255, Math.round(238 - m * 28), Math.round(170 - m * 60)];
     } else if (pos < 0.75) {
-      // mid — gold to amber
+      // mid - gold to amber
       const m = (pos - 0.35) / 0.40;
       return [255, Math.round(210 - m * 70), Math.round(110 - m * 50)];
     } else {
-      // treble — flame to ember
+      // treble - flame to ember
       const m = (pos - 0.75) / 0.25;
       return [Math.round(255 - m * 12), Math.round(140 - m * 90), Math.round(60 - m * 40)];
     }
@@ -1514,6 +1653,52 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
   }
 
   requestAnimationFrame(render);
+
+  // === Waitlist (mailing list capture, posts to the same Formspree form) ===
+  const waitlistForm = document.getElementById('waitlistForm');
+  if (waitlistForm) {
+    const waitlistEmail = document.getElementById('waitlistEmail');
+    const waitlistMsg = document.getElementById('waitlistMsg');
+    const waitlistLabel = document.getElementById('waitlistLabel');
+    const waitlistBtn = waitlistForm.querySelector('.waitlist-btn');
+    waitlistEmail.addEventListener('input', () => { waitlistEmail.style.borderBottomColor = ''; });
+    waitlistForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = (waitlistEmail.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        waitlistEmail.style.borderBottomColor = 'var(--flame-deep)';
+        waitlistEmail.focus();
+        return;
+      }
+      const orig = waitlistLabel.textContent;
+      waitlistLabel.textContent = 'Joining';
+      waitlistBtn.disabled = true;
+      try {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            "Form": "Threshold Waitlist",
+            _subject: `THRESHOLD WAITLIST · ${email}`,
+            _replyto: email
+          })
+        });
+        let body = {};
+        try { body = await res.json(); } catch(_){}
+        if (!res.ok || body.ok === false) throw new Error('failed');
+        waitlistForm.hidden = true;
+        waitlistMsg.textContent = 'You are on the list. The circle will hear first.';
+        waitlistMsg.hidden = false;
+      } catch (err) {
+        waitlistLabel.textContent = orig;
+        waitlistBtn.disabled = false;
+        waitlistMsg.textContent = 'Something went wrong. Please try again, or email us directly.';
+        waitlistMsg.hidden = false;
+      }
+    });
+  }
+
 })();
 </script>
 </body>
