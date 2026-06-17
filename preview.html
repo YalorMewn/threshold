@@ -109,6 +109,8 @@ body.complete .play-label{color:var(--ember)}
 .rail{position:fixed;top:50%;transform:translateY(-50%);z-index:30;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;line-height:1.6;color:var(--ink-4)}
 .rail-left{left:32px;text-align:left}
 .rail-right{right:32px;text-align:right}
+/* Hide the side rails until the viewport is wide enough to clear the centered hero (prevents overlap) */
+@media (max-width:1200px){.rail{display:none}}
 .rail-title{font-size:9px;letter-spacing:0.28em;color:var(--bronze);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .rail-right .rail-title{justify-content:flex-end}
 .rail-title::before,.rail-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line-2),transparent)}
