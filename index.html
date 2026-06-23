@@ -371,7 +371,7 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 .gateway-spacer{height:100vh;width:100%;pointer-events:none}
 .editorial{position:relative;z-index:90;background:var(--bg);border-top:1px solid var(--line-2)}
 .ed-section{max-width:680px;margin:0 auto;padding:104px 32px;border-bottom:1px solid rgba(232,197,71,0.08)}
-.ed-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--bronze);margin-bottom:26px;display:flex;align-items:center;gap:14px}
+.ed-eyebrow{font-family:'JetBrains Mono',monospace;font-size:20px;letter-spacing:0.32em;text-transform:uppercase;color:var(--bronze);margin-bottom:26px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .ed-eyebrow::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--flame),transparent)}
 .ed-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-0.01em;margin-bottom:30px;background:linear-gradient(180deg,#FFF6D6 0%,#F5E6A8 45%,#E8C547 75%,#FF8C42 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ed-lead{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(18px,2.2vw,22px);color:var(--gold-bright);line-height:1.4;margin-top:-14px;margin-bottom:30px}
@@ -400,6 +400,21 @@ body.view-apply.app-submitted .app-confirmation{opacity:1;visibility:visible;poi
 .ed-apply-btn:hover{border-bottom-color:var(--flame)}
 .ed-apply-btn .arrow{transition:transform 300ms var(--easing)}
 .ed-apply-btn:hover .arrow{transform:translateX(5px)}
+
+/* Transmissions (Substack) */
+.ed-writings{border-bottom:none}
+.writings-list{display:flex;flex-direction:column;margin-top:8px}
+.writing-card{display:block;text-decoration:none;padding:24px 0;border-top:1px solid rgba(232,197,71,0.12);transition:padding-left 350ms var(--easing)}
+.writing-card:last-of-type{border-bottom:1px solid rgba(232,197,71,0.12)}
+.writing-card:hover{padding-left:14px}
+.writing-date{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:var(--bronze);margin-bottom:10px}
+.writing-title{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(22px,3vw,30px);line-height:1.18;color:var(--gold-bright);transition:color 300ms var(--easing)}
+.writing-card:hover .writing-title{color:#FFF6D6}
+.writing-excerpt{font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:300;line-height:1.55;color:var(--ink-3);margin-top:8px}
+.writings-all{display:inline-flex;align-items:center;gap:8px;margin-top:30px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-bright);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:4px;transition:border-color 300ms var(--easing)}
+.writings-all:hover{border-bottom-color:var(--flame)}
+.writings-all .arrow{transition:transform 300ms var(--easing)}
+.writings-all:hover .arrow{transform:translate(3px,-3px)}
 
 .site-foot{position:relative;z-index:90;background:var(--bg);border-top:1px solid var(--line-2);display:flex;justify-content:space-between;align-items:center;padding:30px 36px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--ink-5);flex-wrap:wrap;gap:10px}
 
@@ -797,16 +812,17 @@ body.scrolled .scroll-cue{opacity:0}
     <div class="ed-eyebrow">The Land</div>
     <h2 class="ed-title">Off-grid in the Blue Ridge.</h2>
     <div class="ed-body">
-      <p>Deep in the oldest mountains on the continent, above Asheville, North Carolina, where the ridgelines hold a silence the modern world has forgotten.</p>
+      <p>Deep in the oldest mountains on the continent, on private land, where the ridgelines hold a silence the modern world has forgotten.</p>
       <p>No screens. No clocks. No audience. Only the land, the fire, and the circle of men who came to do the work.</p>
     </div>
   </section>
 
   <section class="ed-section ed-dates">
-    <div class="ed-eyebrow">The Dates</div>
-    <h2 class="ed-title">Mid-September. The circle hears first.</h2>
+    <div class="ed-eyebrow">Dates & Location</div>
+    <h2 class="ed-title">September 18 to 20.</h2>
     <div class="ed-body">
-      <p>Twenty men will be chosen. The exact dates are released to the mailing list before the application opens publicly. Join below and you will be the first to know when it goes live.</p>
+      <p>Twenty men. Three days in the mountains above Asheville, North Carolina. The exact location is revealed upon acceptance into the program.</p>
+      <p>Join the circle below to stay close as the gathering approaches.</p>
     </div>
     <form class="waitlist" id="waitlistForm" autocomplete="on" novalidate>
       <input class="waitlist-input" id="waitlistEmail" type="email" name="email" placeholder="your@email.com" aria-label="Email address" required>
@@ -817,6 +833,30 @@ body.scrolled .scroll-cue{opacity:0}
       <p class="ed-apply-line">Already know this is yours?</p>
       <a class="ed-apply-btn" href="#apply">Begin the application <span class="arrow">→</span></a>
     </div>
+  </section>
+
+  <section class="ed-section ed-writings">
+    <div class="ed-eyebrow">Transmissions from the Temple</div>
+    <h2 class="ed-title">The latest writing.</h2>
+    <div class="writings-list">
+      <!-- WRITINGS:START -->
+        <a class="writing-card" href="https://lunaora.substack.com/p/i-am-a-sex-priestess-and-i-am-here" target="_blank" rel="noopener noreferrer">
+          <div class="writing-date">June 20, 2026</div>
+          <div class="writing-title">I Am a Sex Priestess. And I Am Here to Initiate Men</div>
+          <div class="writing-excerpt">THE UNINITIATED MAN Series- part 1</div>
+        </a>
+        <a class="writing-card" href="https://lunaora.substack.com/p/when-men-cry" target="_blank" rel="noopener noreferrer">
+          <div class="writing-date">June 17, 2026</div>
+          <div class="writing-title">When Men Cry</div>
+          <div class="writing-excerpt">A call to real men, to rise, to feel, and to return to themselves.</div>
+        </a>
+        <a class="writing-card" href="https://lunaora.substack.com/p/good-men-are-sacred" target="_blank" rel="noopener noreferrer">
+          <div class="writing-date">June 10, 2026</div>
+          <div class="writing-title">Good men are sacred</div>
+        </a>
+      <!-- WRITINGS:END -->
+    </div>
+    <a class="writings-all" href="https://lunaora.substack.com" target="_blank" rel="noopener noreferrer">Read every transmission <span class="arrow">↗</span></a>
   </section>
 
 </main>
